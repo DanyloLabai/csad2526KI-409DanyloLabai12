@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(Project1 CXX)
 
 # Set C++14 standard
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -23,8 +23,9 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_Declare(
   googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG release-1.14.0
+  GIT_TAG v1.15.2
 )
+
 FetchContent_MakeAvailable(googletest)
 
 enable_testing()
