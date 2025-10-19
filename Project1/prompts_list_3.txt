@@ -1,0 +1,75 @@
+create new files math_operations.h, math_operations.cpp and add func int add(int a, int b) in header file
+#pragma once
+
+// Adds two integers and returns the sum.
+inline int add(int a, int b) {
+    return a + b;
+}
+
+#include "math_operations.h"
+
+// Implementation file present so the source can be added to the build.
+// No out-of-line definitions required for `add` because it's defined inline in the header.
+
+
+create new tests folder with file unit_tests.cpp, and write some tests The tests use plain assert statements instead of the required GoogleTest TEST() macros, even though gtest_main is linked.
+#include "gtest/gtest.h"
+#include "../math_operations.h"
+
+TEST(AdditionTests, AddPositives) {
+    EXPECT_EQ(add(2, 3), 5);
+}
+
+TEST(AdditionTests, AddNegatives) {
+    EXPECT_EQ(add(-4, -6), -10);
+}
+
+TEST(AdditionTests, AddPosAndNeg) {
+    EXPECT_EQ(add(7, -2), 5);
+}
+
+TEST(AdditionTests, AddWithZero) {
+    EXPECT_EQ(add(0, 5), 5);
+}
+
+TEST(AdditionTests, AddZeros) {
+    EXPECT_EQ(add(0, 0), 0);
+}
+
+TEST(AdditionTests, LargeValues) {
+    EXPECT_EQ(add(1000000, 2000000), 3000000);
+}
+
+cmake_minimum_required(VERSION 3.14)
+project(Project1 CXX)
+
+# Set C++14 standard
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Library for project logic
+add_library(${PROJECT_NAME}_lib math_operations.cpp)
+
+# Main executable
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_lib)
+
+# Enable tests
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/heads/main.zip
+)
+# Prevent overriding the parent project's compiler/linker settings on Windows
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+# Tests executable using gtest_main
+add_executable(${PROJECT_NAME}_tests tests/unit_tests.cpp)
+target_link_libraries(${PROJECT_NAME}_tests PRIVATE ${PROJECT_NAME}_lib GTest::gtest_main)
+
+include(GoogleTest)
+gtest_discover_tests(${PROJECT_NAME}_tests)
